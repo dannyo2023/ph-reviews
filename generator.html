@@ -5,21 +5,26 @@
   <title>PeruHop Review Generator</title>
 
   <!-- 1️⃣  Load the Adobe Express Embed SDK (drops CCEverywhere on window) -->
-<script src="https://cc-embed.adobe.com/sdk/v4/CCEverywhere.js"></script>
+  <script src="https://cc-embed.adobe.com/sdk/v4/CCEverywhere.js"></script>
+</head>
 
+<body style="margin:0;"></body>
+
+<!-- 2️⃣  Initialise the SDK and open your template -->
 <script type="module">
-  // 1 – confirm the SDK is present
+  // Confirm the SDK file really loaded
   if (!window.CCEverywhere) {
-    alert("SDK did not load"); return;
+    alert("SDK did not load");                 // remove later
+    throw new Error("SDK missing");
   }
 
-  // 2 – initialise
+  // Init
   const { editor } = await window.CCEverywhere.initialize({
-    clientId : "b019b4110f86434ebaa727e50f4d5cf1",
+    clientId : "b019b4110f86434ebaa727e50f4d5cf1",   // ← your Embed SDK key
     appName  : "PeruHop Generator"
   });
 
-  // 3 – use the FULL URN you just pasted from the address-bar
+  // Open the template (use the full URN because it’s an asset, not a /project/)
   await editor.createWithTemplate({
     templateId : "urn:aaid:sc:US:caf8b3d3-9904-42c4-b9ad-eda65204be55",
     variables  : {
@@ -31,8 +36,12 @@
     }
   });
 
+  // Handle Publish
   editor.onPublish(({ outputs }) => {
-    console.log("PNG ready:", outputs?.[0]?.url);
-    alert("✅ Graphic exported!\n" + outputs?.[0]?.url);
+    const png = outputs?.[0]?.url;
+    console.log("PNG ready →", png);
+    alert(`✅ Graphic exported!\n${png}`);
+    // later: POST png to your n8n webhook here
   });
 </script>
+</html>
