@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PeruHop Review Generator</title>
+  <script type="module">
+    import { CCEverywhere } from "https://cc-embed.adobe.com/sdk/v4/CCEverywhere.js";
+
+    // 1. Parse review data sent by n8n (querystring or fetch to /payload)
+    const review = await fetch("/payload").then(r => r.json());
+    // review = { pass, title, review, name, date, callback }
+
+    // 2. Init SDK
+    const { editor } = await CCEverywhere.initialize({
+      clientId: "b019b4110f86434ebaa727e50f4d5cf1",
+      appName : "PeruHop Generator"
+    });
+
+    // 3. Open template and inject variables
+    await editor.createWithTemplate({
+      templateId : "639c22e5-d960-4b65-a1e7-9579ffefb85f",
+      variables  : review            // same key names in template: pass,title,…
+    });
+
+    // 4. When user hits “Publish”, send PNG back to n8n
+    editor.onPublish(async (evt) => {
+      const png = evt.outputs[0]?.url;
+      await fetch(review.callback, {
+        method : "POST",
+        headers: { "Content-Type": "application/json" },
+        body   : JSON.stringify({ ...review, png })
+      });
+      alert("✅ PNG sent back to n8n. You’re done!");
+    });
+  </script>
+</head>
+<body></body>
+</html>
