@@ -5,28 +5,34 @@
   <title>PeruHop Review Generator</title>
 
   <!-- 1️⃣  Load the Adobe Express Embed SDK (drops CCEverywhere on window) -->
-  <script src="https://cc-embed.adobe.com/sdk/v4/CCEverywhere.js"></script>
-</head>
-
-<body style="margin:0;"></body>
+<script src="https://cc-embed.adobe.com/sdk/v4/CCEverywhere.js"></script>
 
 <script type="module">
-  (async () => {
-    try {
-      console.log("Init start");
-      const { editor } = await window.CCEverywhere.initialize({
-        clientId : "b019b4110f86434ebaa727e50f4d5cf1",
-        appName  : "PH-test"
-      });
-      console.log("Init OK");
+  // 1 – confirm the SDK is present
+  if (!window.CCEverywhere) {
+    alert("SDK did not load"); return;
+  }
 
-      await editor.createWithTemplate({
-        templateId : "639c22e5-d960-4b65-a1e7-9579ffefb85f",
-        variables  : { pass:"Foo", title:"Bar", review:"Baz", name:"Qux", date:"Jul 2025" }
-      });
-      console.log("Template loaded");
-    } catch (err) {
-      console.error("Init FAILED →", err);
+  // 2 – initialise
+  const { editor } = await window.CCEverywhere.initialize({
+    clientId : "b019b4110f86434ebaa727e50f4d5cf1",
+    appName  : "PeruHop Generator"
+  });
+
+  // 3 – use the FULL URN you just pasted from the address-bar
+  await editor.createWithTemplate({
+    templateId : "urn:aaid:sc:US:caf8b3d3-9904-42c4-b9ad-eda65204be55",
+    variables  : {
+      pass  : "Full South to Cusco",
+      title : "Ultimate Peru Experience!",
+      review: "I did the full south…",
+      name  : "Jack D",
+      date  : "Jun 2023"
     }
-  })();
+  });
+
+  editor.onPublish(({ outputs }) => {
+    console.log("PNG ready:", outputs?.[0]?.url);
+    alert("✅ Graphic exported!\n" + outputs?.[0]?.url);
+  });
 </script>
