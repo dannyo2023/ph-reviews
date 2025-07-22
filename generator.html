@@ -1,30 +1,20 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>PeruHop Review Generator</title>
-
-  <!-- 1️⃣  Load the Adobe Express Embed SDK (drops CCEverywhere on window) -->
-  <script src="https://cc-embed.adobe.com/sdk/v4/CCEverywhere.js"></script>
-</head>
-
-<body style="margin:0;"></body>
-
-<!-- 2️⃣  Your logic runs after the SDK is on the page -->
 <script type="module">
-  /* ----------------------------------------------------------
-     Replace YOUR_EMBED_CLIENT_ID with the one from Adobe console
-     ---------------------------------------------------------- */
-  const { editor } = await window.CCEverywhere.initialize({
-    clientId : "b019b4110f86434ebaa727e50f4d5cf1",
-    appName  : "PeruHop Generator"
-  });
+  (async () => {
+    try {
+      console.log("Init start");
+      const { editor } = await window.CCEverywhere.initialize({
+        clientId : "b019b4110f86434ebaa727e50f4d5cf1",
+        appName  : "PH-test"
+      });
+      console.log("Init OK");
 
-  /* ----------------------------------------------------------
-     For tonight’s test we’ll hard-code the five text variables.
-     Later you’ll fetch them from /payload or the querystring.
-     ---------------------------------------------------------- */
-  await editor.createWithTemplate({
-    templateId : "639c22e5-d960-4b65-a1e7-9579ffefb85f",   // your Express template
-    variables  : {
-      pass  : "
+      await editor.createWithTemplate({
+        templateId : "639c22e5-d960-4b65-a1e7-9579ffefb85f",
+        variables  : { pass:"Foo", title:"Bar", review:"Baz", name:"Qux", date:"Jul 2025" }
+      });
+      console.log("Template loaded");
+    } catch (err) {
+      console.error("Init FAILED →", err);
+    }
+  })();
+</script>
